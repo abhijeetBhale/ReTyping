@@ -7,14 +7,15 @@ services:
     name: fingerfiasco-next
     runtime: node
     plan: free
-    buildCommand: npm install; npm run build
+    # NOTE: never set NODE_ENV=production here — npm then skips devDependencies
+    # and the Tailwind/PostCSS build breaks. Next runs production mode on its own.
+    # --include=dev makes the build robust even if the environment disagrees.
+    buildCommand: npm install --include=dev; npm run build
     startCommand: npm run start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
         value: 22.14.0
-      - key: NODE_ENV
-        value: production
       # TODO(sync): after the first deploy, replace with the real
       # https://<service>.onrender.com URL (Dashboard → service → URL),
       # then trigger a manual redeploy — metadata is baked at build time.
