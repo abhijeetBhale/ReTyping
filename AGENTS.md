@@ -20,7 +20,7 @@ Next.js 16 App Router (Turbopack) + React 19 + Tailwind v4 + TypeScript. Typing 
 
 ## Architecture
 
-- `app/` routes: `/`, `/punctuation`, `/numbers`, `/developers` (+ `sitemap.ts`, `robots.ts`, `manifest.ts`, `opengraph-image.tsx`).
+- `app/` routes: `/`, `/punctuation`, `/numbers` live in the `(test)` route group (URLs unchanged) with a shared `layout.tsx` hosting `TypingGame`; `/developers` stands alone (+ `sitemap.ts`, `robots.ts`, `manifest.ts`, `opengraph-image.tsx`). Never render `TypingGame` in a page — the shared layout is what keeps tab switches remount-free.
 - Typing core: `components/TypingGame.tsx` + `hooks/useTypingEngine.ts`. Scroll offset lives in a ref applied as a direct DOM `transform` and the caret is measured after it in ONE layout effect — never split into separate marginTop/cursor states (causes caret drift). Line height is measured from rendered rows, never hardcoded.
 - Word banks: `lib/words.ts` — 5 `EnglishLevel` pools (1 easy → 5 expert); punctuation/numbers modes are transforms on top. Selected via `?level=` (`parseLevel` validates).
 - Options UI: `components/ConfigBar.tsx` above the game mirrors Monkeytype's three groups (content toggles, levels 1–5, durations) as param-preserving Links; slim `Navbar.tsx` holds only brand + Developers/GitHub. Never add modes that don't exist (no words/quote/zen/custom).

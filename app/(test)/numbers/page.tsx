@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import TypingGame from "@/components/TypingGame";
 
 export const metadata: Metadata = {
   title: "Numbers Typing Speed Test & Practice",
@@ -11,12 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function NumbersPage() {
-  return (
-    <div className="container-fluid">
-      <h1 className="sr-only">Typing test with numbers</h1>
-      <Suspense fallback={<div id="main">Loading…</div>}>
-        <TypingGame mode="numbers" />
-      </Suspense>
-    </div>
-  );
+  return <h1 className="sr-only">Typing test with numbers</h1>;
 }

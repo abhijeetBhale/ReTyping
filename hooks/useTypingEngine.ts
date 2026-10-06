@@ -101,6 +101,13 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
     clearTimer();
     gameStartRef.current = null;
     offsetRef.current = 0;
+    // Reset the DOM transform synchronously when the game is already mounted
+    // (persistent layout): otherwise the first paint of the fresh words
+    // inherits the old scroll offset for a frame. Null on fresh mounts —
+    // the existing rAF below covers that case.
+    if (wordsRef.current) {
+      wordsRef.current.style.transform = "translateY(0px)";
+    }
     lineHeightRef.current = 0;
     const fresh = buildWords(mode, level, WORD_COUNT);
     wordsRefState.current = fresh;

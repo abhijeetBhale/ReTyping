@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { DURATIONS_MS, GAME_TIME_MS, type GameMode } from "@/lib/config";
 import { LEVEL_META, parseLevel } from "@/lib/words";
@@ -24,8 +24,17 @@ function letterClass(
     .join(" ");
 }
 
-export default function TypingGame({ mode }: { mode: GameMode }) {
+export default function TypingGame() {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  // Mode follows the route — the game itself persists across tab switches
+  // (it lives in the shared route-group layout), so this just swaps words.
+  const mode: GameMode =
+    pathname === "/punctuation"
+      ? "punctuation"
+      : pathname === "/numbers"
+        ? "numbers"
+        : "home";
   const requested = Number(searchParams.get("duration"));
   const durationMs = DURATIONS_MS.includes(requested as (typeof DURATIONS_MS)[number])
     ? requested
