@@ -530,18 +530,17 @@ span.letter {
   color: #707070;
 }
 
-/* ------ Developers page: grayscale portrait tiles ------ */
+/* ------ Developer profile: single-column professional lockup ------ */
 .dev-page {
   background: #ffffff;
   color: #141414;
   min-height: 100vh;
   padding: 80px 24px 120px;
   font-family: var(--font-inter), -apple-system, "Helvetica Neue", Arial, sans-serif;
-  max-width: 1080px;
+  max-width: 860px;
   margin: 0 auto;
 }
 .dev-title {
-  text-align: center;
   font-size: 56px;
   font-weight: 650;
   line-height: 1;
@@ -550,50 +549,170 @@ span.letter {
   color: #141414;
 }
 .dev-subtitle {
-  text-align: center;
   font-size: 20px;
   font-weight: 300;
   line-height: 1.38;
   color: #707070;
   margin: 16px 0 0;
 }
-.dev-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-  max-width: 1080px;
-  margin: 48px auto 0;
-}
-.dev-card {
+.profile-hero {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  background: #f3f3f3;
-  border-radius: 24px;
-  padding: 24px;
-  gap: 0;
+  gap: 32px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.dev-card img {
-  width: 100%;
-  height: 320px;
+.profile-photo {
+  width: 220px;
+  height: auto;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 16px;
   filter: grayscale(1);
+  flex-shrink: 0;
 }
-.dev-card span {
-  margin-top: 16px;
-  font-size: 20px;
+.profile-intro {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+.profile-eyebrow {
+  font-size: 12px;
   font-weight: 600;
-  line-height: 1.3;
   letter-spacing: 0;
-  color: #141414;
+  color: #707070;
+  margin: 0 0 8px;
 }
-.dev-card p {
-  margin: 4px 0 0;
+.profile-name {
+  text-align: left;
+}
+.profile-role {
+  text-align: left;
+}
+.profile-location {
   font-size: 14px;
   font-weight: 450;
-  line-height: 1.43;
   color: #707070;
+  margin: 12px 0 0;
+}
+.profile-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.profile-links a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #141414;
+  text-decoration: none;
+  background: #f3f3f3;
+  border-radius: 9999px;
+  padding: 10px 18px;
+  transition: background 0.15s ease;
+}
+.profile-links a:hover {
+  background: #ececec;
+}
+.profile-links a:focus-visible {
+  outline: 2px solid #141414;
+  outline-offset: 2px;
+}
+.profile-section {
+  margin-top: 48px;
+}
+.profile-section h2 {
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0;
+  margin: 0 0 16px;
+  color: #141414;
+}
+.profile-section p {
+  font-size: 16px;
+  font-weight: 450;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: #262626;
+  margin: 0;
+  max-width: 65ch;
+}
+.profile-card {
+  background: #f3f3f3;
+  border-radius: 24px;
+  padding: 24px;
+}
+.profile-card + .profile-card {
+  margin-top: 16px;
+}
+.profile-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.profile-card-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #141414 !important;
+}
+.profile-card-meta {
+  font-size: 14px !important;
+  color: #707070 !important;
+  margin-top: 4px !important;
+}
+.profile-card ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.profile-card li {
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.55;
+  color: #262626;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.profile-grid .profile-card + .profile-card {
+  margin-top: 0;
+}
+.profile-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.profile-skill-group {
+  background: #f3f3f3;
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+.profile-skill-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #707070 !important;
+  margin-bottom: 10px !important;
+}
+.profile-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.profile-pill {
+  font-size: 13px;
+  font-weight: 600;
+  color: #141414;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 9999px;
+  padding: 7px 14px;
+  white-space: nowrap;
 }
 
 /* ------ Responsive (Mobbin collapsing) ------ */
