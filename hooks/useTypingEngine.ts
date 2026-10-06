@@ -130,16 +130,21 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
   // Mount already painted full words (see lazy initializer above), so it only
   // grabs focus — rebuilding here would swap the words right after paint,
   // which reads as a flicker on every tab switch. Param changes still reset.
-  const mountedRef = useRef(false);
+  // NOTE: keyed on the param values, not a boolean flag — an effect cleanup
+  // that resets a "mounted" flag runs before EVERY re-invocation, which would
+  // swallow all post-mount resets (level/duration/mode changes doing nothing).
+  const initialKeyRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
+    const key = `${mode}|${level}|${durationMs}`;
+    if (initialKeyRef.current === null) {
+      initialKeyRef.current = key;
       gameRef.current?.focus();
-      return () => {
-        mountedRef.current = false;
-      };
+      return;
     }
-    reset();
+    if (initialKeyRef.current !== key) {
+      initialKeyRef.current = key;
+      reset();
+    }
   }, [mode, level, durationMs]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => clearTimer, [clearTimer]);
