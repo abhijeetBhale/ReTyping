@@ -1,0 +1,23 @@
+# Render blueprint for FingerFiasco (Next.js App Router).
+# Dashboard: New → Blueprint → select this repo. Render reads this file
+# and creates the web service below. `npm run start` (next start)
+# automatically listens on Render's injected PORT.
+services:
+  - type: web
+    name: fingerfiasco-next
+    runtime: node
+    plan: free
+    buildCommand: npm install; npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.14.0
+      - key: NODE_ENV
+        value: production
+      # TODO(sync): after the first deploy, replace with the real
+      # https://<service>.onrender.com URL (Dashboard → service → URL),
+      # then trigger a manual redeploy — metadata is baked at build time.
+      # Or set a custom domain and use that instead.
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://fingerfiasco-next.onrender.com
