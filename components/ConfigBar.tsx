@@ -1,6 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import {
+  Children,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { DURATIONS_MS, GAME_TIME_MS } from "@/lib/config";
 import { ENGLISH_LEVELS, LEVEL_META, parseLevel } from "@/lib/words";
@@ -57,22 +65,63 @@ function HashIcon() {
   );
 }
 
-function GaugeIcon() {
+/**
+ * One option group with a butter-smooth sliding active pill.
+ * The pill is measured from the live `.active` item and written straight
+ * to the DOM — no React state, so gliding never costs a re-render.
+ */
+function ConfigGroup({
+  label,
+  activeKey,
+  children,
+}: {
+  label: string;
+  activeKey: string;
+  children: ReactNode;
+}) {
+  const groupRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLSpanElement>(null);
+  const childCount = Children.count(children);
+
+  const measure = useCallback(() => {
+    const group = groupRef.current;
+    const slider = sliderRef.current;
+    if (!group || !slider) return;
+    const active = group.querySelector(":scope > .ff-config-item.active");
+    if (!(active instanceof HTMLElement)) {
+      // No active option (e.g. plain home route): park the pill out of sight.
+      slider.style.opacity = "0";
+      return;
+    }
+    slider.style.opacity = "1";
+    slider.style.transform = `translateX(${active.offsetLeft}px)`;
+    slider.style.width = `${active.offsetWidth}px`;
+  }, []);
+
+  // Re-measure whenever the active option (or item count) changes.
+  // Runs before paint, so the pill glides from its old spot — never jumps.
+  useLayoutEffect(measure, [measure, activeKey, childCount]);
+
+  // Re-measure when layout shifts underneath (resize, font swap-in).
+  useEffect(() => {
+    window.addEventListener("resize", measure);
+    let cancelled = false;
+    document.fonts?.ready
+      .then(() => {
+        if (!cancelled) measure();
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
+
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m12 14 4-4" />
-      <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-    </svg>
+    <div ref={groupRef} className="ff-config-group" role="group" aria-label={label}>
+      <span ref={sliderRef} className="ff-config-slider" aria-hidden="true" />
+      {children}
+    </div>
   );
 }
 
@@ -94,7 +143,7 @@ export function ConfigBar() {
 
   return (
     <div className="ff-config" role="group" aria-label="Typing test options">
-      <div className="ff-config-group" role="group" aria-label="Test content">
+      <ConfigGroup label="Test content" activeKey={pathname}>
         <Link
           href={modeHref("/punctuation")}
           className={`ff-config-item${pathname === "/punctuation" ? " active" : ""}`}
@@ -111,12 +160,9 @@ export function ConfigBar() {
           <HashIcon />
           numbers
         </Link>
-      </div>
+      </ConfigGroup>
 
-      <div className="ff-config-group" role="group" aria-label="English difficulty level">
-        <span className="ff-config-lead" aria-hidden="true">
-          <GaugeIcon />
-        </span>
+      <ConfigGroup label="English difficulty level" activeKey={String(level)}>
         {ENGLISH_LEVELS.map((l) => (
           <Link
             key={l}
@@ -129,9 +175,9 @@ export function ConfigBar() {
             {l}
           </Link>
         ))}
-      </div>
+      </ConfigGroup>
 
-      <div className="ff-config-group" role="group" aria-label="Test duration">
+      <ConfigGroup label="Test duration" activeKey={String(activeDuration)}>
         {DURATIONS_MS.map((ms) => (
           <Link
             key={ms}
@@ -143,7 +189,7 @@ export function ConfigBar() {
             {ms / 1000}
           </Link>
         ))}
-      </div>
+      </ConfigGroup>
     </div>
   );
 }

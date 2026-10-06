@@ -153,6 +153,7 @@ body {
   width: 100%;
 }
 .ff-config-group {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
@@ -161,13 +162,25 @@ body {
   border-radius: 16px;
   padding: 5px;
 }
-.ff-config-lead {
-  display: grid;
-  place-items: center;
-  color: #adadad;
-  padding: 0 2px 0 10px;
+/* Gliding active pill: measured from the live item, eased on transform
+   and width for a butter-smooth slide between tabs. */
+.ff-config-slider {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  border-radius: 9999px;
+  background: #141414;
+  z-index: 0;
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
 }
 .ff-config-item {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -179,17 +192,15 @@ body {
   letter-spacing: 0;
   padding: 8px 14px;
   border-radius: 9999px;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: color 0.25s ease;
   white-space: nowrap;
 }
 .ff-config-item:hover {
   color: #141414;
-  background: rgba(20, 20, 20, 0.05);
   text-decoration: none;
 }
 .ff-config-item.active {
   color: #ffffff;
-  background: #141414;
 }
 .ff-config-item:active {
   transform: scale(0.96);
@@ -743,7 +754,8 @@ span.letter {
   }
   #reset-button,
   .ff-top-link,
-  .ff-config-item {
+  .ff-config-item,
+  .ff-config-slider {
     transition: none;
   }
 }
