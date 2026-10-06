@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { DURATIONS_MS, GAME_TIME_MS, type GameMode } from "@/lib/config";
 import { LEVEL_META, parseLevel } from "@/lib/words";
-import { LevelDropdown } from "@/components/LevelDropdown";
+import { ConfigBar } from "@/components/ConfigBar";
 import { ResultCard } from "@/components/ResultCard";
 
 function letterClass(
@@ -26,19 +26,11 @@ function letterClass(
 
 export default function TypingGame({ mode }: { mode: GameMode }) {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
   const requested = Number(searchParams.get("duration"));
   const durationMs = DURATIONS_MS.includes(requested as (typeof DURATIONS_MS)[number])
     ? requested
     : GAME_TIME_MS;
   const level = parseLevel(searchParams.get("level"));
-
-  const onLevelChange = (next: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("level", String(next));
-    router.push(`${pathname}?${params.toString()}`);
-  };
 
   const {
     words,
@@ -106,6 +98,7 @@ export default function TypingGame({ mode }: { mode: GameMode }) {
 
   return (
     <div id="main">
+      <ConfigBar />
       <div id="info-container">
         <div id="timer" aria-live="polite">
           {finished ? `WPM: ${wpm.toFixed(0)}` : `${secondsLeft}s`}
@@ -116,7 +109,6 @@ export default function TypingGame({ mode }: { mode: GameMode }) {
           </div>
         )}
         <div id="info-right">
-          <LevelDropdown value={level} onChange={onLevelChange} />
           <button id="reset-button" type="button" onClick={reset} aria-label="Start a new typing test">
             <svg
               xmlns="http://www.w3.org/2000/svg"

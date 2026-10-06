@@ -60,27 +60,25 @@ body {
   flex: 1;
 }
 
-/* ------ Floating nav-pill (Mobbin) ------ */
+/* ------ Slim top bar (brand left, links right) ------ */
 .ff-header {
   position: sticky;
-  top: 12px;
+  top: 0;
   z-index: 50;
   display: flex;
   justify-content: center;
-  padding: 12px 16px 0;
-  background: transparent;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
 }
-.ff-nav {
+.ff-topbar {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  max-width: 880px;
-  padding: 8px 8px 8px 12px;
-  background: #f3f3f3;
-  border: 1px solid #f0f0f0;
-  border-radius: 9999px;
-  flex-wrap: wrap;
+  max-width: 1080px;
+  min-height: 60px;
+  padding: 8px 8px;
 }
 .ff-brand {
   display: inline-flex;
@@ -105,14 +103,15 @@ body {
   border-radius: 30%;
   flex-shrink: 0;
 }
-.ff-links {
+.ff-top-links {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   margin-left: auto;
-  flex-wrap: wrap;
 }
-.ff-links .nav-link {
+.ff-top-link {
+  display: inline-flex;
+  align-items: center;
   color: #707070;
   text-decoration: none;
   font-weight: 600;
@@ -124,43 +123,84 @@ body {
   transition: background 0.15s ease, color 0.15s ease;
   white-space: nowrap;
 }
-.ff-links .nav-link:hover {
+.ff-top-link:hover {
   color: #141414;
   background: rgba(20, 20, 20, 0.05);
   text-decoration: none;
 }
-.ff-links .nav-link.active {
+.ff-top-link.active {
   color: #141414;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(20, 20, 20, 0.08);
+  background: #f3f3f3;
 }
-.ff-links .nav-link:active {
+.ff-top-link:active {
   transform: scale(0.96);
 }
-.ff-links .nav-link:focus-visible {
+.ff-top-link:focus-visible {
   outline: 2px solid #141414;
   outline-offset: 2px;
 }
-.ff-dot {
-  display: none;
+.ff-top-icon {
+  padding: 9px 10px;
 }
-.ff-durations {
+
+/* ------ Config bar (monkeytype-style option groups, Mobbin light) ------ */
+.ff-config {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.ff-config-group {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: #ffffff;
+  background: #f3f3f3;
   border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 5px;
+}
+.ff-config-lead {
+  display: grid;
+  place-items: center;
+  color: #adadad;
+  padding: 0 2px 0 10px;
+}
+.ff-config-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #707070;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.33;
+  letter-spacing: 0;
+  padding: 8px 14px;
   border-radius: 9999px;
-  padding: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
 }
-.ff-durations .nav-link {
-  padding: 7px 12px;
-  font-size: 13px;
+.ff-config-item:hover {
+  color: #141414;
+  background: rgba(20, 20, 20, 0.05);
+  text-decoration: none;
 }
-.ff-durations .nav-link.active {
-  background: #141414;
+.ff-config-item.active {
   color: #ffffff;
-  box-shadow: none;
+  background: #141414;
+}
+.ff-config-item:active {
+  transform: scale(0.96);
+}
+.ff-config-item:focus-visible {
+  outline: 2px solid #141414;
+  outline-offset: 2px;
+}
+.ff-config-number {
+  padding: 8px 13px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ------ Main game layout ------ */
@@ -351,146 +391,6 @@ span.letter {
   transform: scale(0.98);
 }
 
-/* ------ Level dropdown (Mobbin pill + card menu) ------ */
-.ff-level {
-  position: relative;
-  display: inline-flex;
-}
-.ff-level-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 44px;
-  padding: 0 18px;
-  font-family: var(--font-inter), -apple-system, "Helvetica Neue", Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: #141414;
-  background: #f3f3f3;
-  border: 1px solid #f0f0f0;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-.ff-level-button:hover {
-  background: #ececec;
-}
-.ff-level-button:active {
-  transform: scale(0.97);
-}
-.ff-level-button:focus-visible {
-  outline: none;
-  border-color: #141414;
-}
-.ff-level-button svg {
-  display: block;
-  transition: transform 0.18s ease;
-}
-.ff-level-button .ff-level-chevron-open {
-  transform: rotate(180deg);
-}
-.ff-level-icon {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  color: #ffffff;
-  background: #141414;
-  border-radius: 30%;
-  flex-shrink: 0;
-}
-.ff-level-value {
-  white-space: nowrap;
-}
-.ff-level-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 60;
-  min-width: 264px;
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-  background: #ffffff;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(20, 20, 20, 0.12);
-  transform-origin: top right;
-}
-.ff-level-option:active {
-  transform: scale(0.98);
-}
-.ff-level-option:focus-visible {
-  outline: 2px solid #141414;
-  outline-offset: -2px;
-}
-.ff-level-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 10px 12px;
-  font-family: var(--font-inter), -apple-system, "Helvetica Neue", Arial, sans-serif;
-  text-align: left;
-  color: #141414;
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
-.ff-level-option.is-focused {
-  background: #f3f3f3;
-}
-.ff-level-option.is-active {
-  background: #f3f3f3;
-}
-.ff-level-badge {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  font-size: 13px;
-  font-weight: 650;
-  color: #141414;
-  background: #f3f3f3;
-  border: 1px solid #e0e0e0;
-  border-radius: 30%;
-}
-.ff-level-option.is-active .ff-level-badge {
-  color: #ffffff;
-  background: #141414;
-  border-color: #141414;
-}
-.ff-level-text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-.ff-level-name {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.33;
-  letter-spacing: 0;
-}
-.ff-level-hint {
-  font-size: 12px;
-  font-weight: 450;
-  line-height: 1.33;
-  letter-spacing: 0;
-  color: #707070;
-  white-space: nowrap;
-}
-.ff-level-check {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  margin-left: auto;
-  color: #141414;
-  flex-shrink: 0;
-}
 
 #game.over #words {
   opacity: 0.9;
@@ -720,11 +620,14 @@ span.letter {
   .container-fluid {
     padding: 88px 16px 0;
   }
-  .ff-nav {
+  .ff-topbar {
     max-width: 100%;
   }
   .ff-brand span.ff-brand-text {
     display: none;
+  }
+  .ff-config {
+    gap: 8px;
   }
   #game {
     padding: 8px 4px;
@@ -759,25 +662,23 @@ span.letter {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Single orchestrated page-load: nav drops in, info bar fades,
-     word field rises. One moment, then stillness. */
-  .ff-header .ff-nav {
+  /* Single orchestrated page-load: bar drops in, config rises,
+     word field follows. One moment, then stillness. */
+  .ff-header .ff-topbar {
     animation: ff-nav-in 0.5s var(--ff-ease-out) backwards;
   }
-  #info-container {
+  #main .ff-config {
     animation: ff-fade-up 0.5s var(--ff-ease-out) 0.08s backwards;
+  }
+  #info-container {
+    animation: ff-fade-up 0.5s var(--ff-ease-out) 0.14s backwards;
   }
   #main #game,
   #main .ff-result {
-    animation: ff-fade-up 0.55s var(--ff-ease-out) 0.16s backwards;
+    animation: ff-fade-up 0.55s var(--ff-ease-out) 0.2s backwards;
   }
   #main .key-tips {
-    animation: ff-fade-up 0.5s var(--ff-ease-out) 0.24s backwards;
-  }
-
-  /* Level menu answers the open action: grows from the trigger. */
-  .ff-level-menu {
-    animation: ff-menu-in 0.14s var(--ff-ease-out) backwards;
+    animation: ff-fade-up 0.5s var(--ff-ease-out) 0.28s backwards;
   }
 
   /* Focus invitation breathes twice, then rests. */
@@ -817,16 +718,6 @@ span.letter {
     transform: translateY(0);
   }
 }
-@keyframes ff-menu-in {
-  from {
-    opacity: 0;
-    transform: scale(0.97) translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
 @keyframes ff-pill-breathe {
   0%,
   100% {
@@ -838,12 +729,12 @@ span.letter {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ff-header .ff-nav,
+  .ff-header .ff-topbar,
+  #main .ff-config,
   #info-container,
   #main #game,
   #main .ff-result,
   #main .key-tips,
-  .ff-level-menu,
   .ff-focus-pill,
   .ff-result-wpm-row,
   .ff-result-stats,
@@ -851,9 +742,8 @@ span.letter {
     animation: none;
   }
   #reset-button,
-  .ff-links .nav-link,
-  .ff-level-button,
-  .ff-level-option {
+  .ff-top-link,
+  .ff-config-item {
     transition: none;
   }
 }

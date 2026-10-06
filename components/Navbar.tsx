@@ -2,34 +2,15 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { DURATIONS_MS } from "@/lib/config";
-
-function durationHref(pathname: string, ms: number): string {
-  return `${pathname}?duration=${ms}`;
-}
+import { usePathname } from "next/navigation";
 
 function NavContent() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const activeDuration = searchParams.get("duration");
-
-  const modeLink = (href: string, label: string) => {
-    const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
-    return (
-      <Link
-        href={href}
-        className={`nav-link${active ? " active" : ""}`}
-        aria-current={active ? "page" : undefined}
-      >
-        {label}
-      </Link>
-    );
-  };
+  const onDevelopers = pathname === "/developers";
 
   return (
     <>
-      <Link href="/" className="ff-brand">
+      <Link href="/" className="ff-brand" aria-label="Finger Fiasco home">
         <span className="ff-brand-mark" aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,22 +24,36 @@ function NavContent() {
         </span>
         <span className="ff-brand-text">Finger Fiasco</span>
       </Link>
-      <div className="ff-links">
-        {modeLink("/", "Home")}
-        {modeLink("/punctuation", "Punctuation")}
-        {modeLink("/numbers", "Numbers")}
-        {modeLink("/developers", "Developers")}
-        <span className="ff-durations" role="group" aria-label="Test duration">
-          {DURATIONS_MS.map((ms) => (
-            <Link
-              key={ms}
-              href={durationHref(pathname, ms)}
-              className={`nav-link${activeDuration === String(ms) ? " active" : ""}`}
-            >
-              {ms / 1000}s
-            </Link>
-          ))}
-        </span>
+      <div className="ff-top-links">
+        <Link
+          href="/developers"
+          className={`ff-top-link${onDevelopers ? " active" : ""}`}
+          aria-current={onDevelopers ? "page" : undefined}
+        >
+          Developers
+        </Link>
+        <a
+          href="https://github.com/abhijeetBhale/FingerFiasco"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ff-top-link ff-top-icon"
+          aria-label="Finger Fiasco on GitHub"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            style={{ fill: "currentColor" }}
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"
+            />
+          </svg>
+        </a>
       </div>
     </>
   );
@@ -67,7 +62,7 @@ function NavContent() {
 export function Navbar() {
   return (
     <header className="ff-header">
-      <nav className="ff-nav" aria-label="Primary">
+      <nav className="ff-topbar" aria-label="Primary">
         <Suspense fallback={null}>
           <NavContent />
         </Suspense>
