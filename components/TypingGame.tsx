@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { DURATIONS_MS, GAME_TIME_MS, type GameMode } from "@/lib/config";
@@ -77,6 +77,18 @@ export default function TypingGame({ mode }: { mode: GameMode }) {
 
   const finished = isOver && wpm !== null;
 
+  // Entrance choreography plays exactly once per page lifetime. Route remounts
+  // (tab switches) must not replay it — that replay is the visible flicker.
+  const [isBoot, setIsBoot] = useState(false);
+  useLayoutEffect(() => {
+    const flag = window as unknown as { __ffBooted?: boolean };
+    if (!flag.__ffBooted) {
+      flag.__ffBooted = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsBoot(true);
+    }
+  }, []);
+
   // Re-focus #game on any keypress (legacy global keydown handler), and
   // Shift+Enter anywhere resets. Intentionally NOT hijacking Ctrl+R.
   useEffect(() => {
@@ -97,7 +109,7 @@ export default function TypingGame({ mode }: { mode: GameMode }) {
   }, [focusGame, reset, gameRef]);
 
   return (
-    <div id="main">
+    <div id="main" className={isBoot ? "ff-boot" : undefined}>
       <ConfigBar />
       <div id="info-container">
         <div id="timer" aria-live="polite">

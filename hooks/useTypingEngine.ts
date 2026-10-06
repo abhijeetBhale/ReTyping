@@ -43,7 +43,10 @@ const VISIBLE_LINES = 3;
 
 export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs: number = GAME_TIME_MS) {
 
-  const [words, setWords] = useState<EngineWord[]>([]);
+  // Words are built synchronously on mount so the first paint already shows
+  // a full test — otherwise every tab switch flashes an empty game surface.
+  const [initialWords] = useState(() => buildWords(mode, level, WORD_COUNT));
+  const [words, setWords] = useState(initialWords);
   const [wordIndex, setWordIndex] = useState(0);
   const [letterIndex, setLetterIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(Math.round(durationMs / 1000));
@@ -62,7 +65,7 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
   const lineHeightRef = useRef(0);
   // Synchronous mirrors so rapid key repeats never read stale state.
   const posRef = useRef({ wordIndex: 0, letterIndex: 0 });
-  const wordsRefState = useRef<EngineWord[]>([]);
+  const wordsRefState = useRef(initialWords);
   const overRef = useRef(false);
 
   useEffect(() => {
@@ -117,8 +120,18 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
     });
   }, [clearTimer, mode, level, durationMs]);
 
+  // Mount already painted full words (see lazy initializer above), so it only
+  // grabs focus — rebuilding here would swap the words right after paint,
+  // which reads as a flicker on every tab switch. Param changes still reset.
+  const mountedRef = useRef(false);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      gameRef.current?.focus();
+      return () => {
+        mountedRef.current = false;
+      };
+    }
     reset();
   }, [mode, level, durationMs]); // eslint-disable-line react-hooks/exhaustive-deps
 

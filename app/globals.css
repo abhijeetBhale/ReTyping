@@ -678,17 +678,17 @@ span.letter {
   .ff-header .ff-topbar {
     animation: ff-nav-in 0.5s var(--ff-ease-out) backwards;
   }
-  #main .ff-config {
+  #main.ff-boot .ff-config {
     animation: ff-fade-up 0.5s var(--ff-ease-out) 0.08s backwards;
   }
-  #info-container {
+  #main.ff-boot #info-container {
     animation: ff-fade-up 0.5s var(--ff-ease-out) 0.14s backwards;
   }
-  #main #game,
-  #main .ff-result {
+  #main.ff-boot #game,
+  #main.ff-boot .ff-result {
     animation: ff-fade-up 0.55s var(--ff-ease-out) 0.2s backwards;
   }
-  #main .key-tips {
+  #main.ff-boot .key-tips {
     animation: ff-fade-up 0.5s var(--ff-ease-out) 0.28s backwards;
   }
 
@@ -741,11 +741,11 @@ span.letter {
 
 @media (prefers-reduced-motion: reduce) {
   .ff-header .ff-topbar,
-  #main .ff-config,
-  #info-container,
-  #main #game,
-  #main .ff-result,
-  #main .key-tips,
+  #main.ff-boot .ff-config,
+  #main.ff-boot #info-container,
+  #main.ff-boot #game,
+  #main.ff-boot .ff-result,
+  #main.ff-boot .key-tips,
   .ff-focus-pill,
   .ff-result-wpm-row,
   .ff-result-stats,
