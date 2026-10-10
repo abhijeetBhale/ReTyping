@@ -74,7 +74,7 @@ export function ResultCard({
         </div>
       </div>
       <div className="ff-result-actions">
-        <button type="button" className="ff-result-retry" onClick={onRetry} autoFocus>
+        <button type="button" className="ff-result-retry" onClick={onRetry}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
