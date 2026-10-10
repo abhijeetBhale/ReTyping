@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
+import { AuthButton } from "@/components/AuthButton";
 
 function NavContent() {
   const pathname = usePathname();
@@ -54,6 +55,9 @@ function NavContent() {
             />
           </svg>
         </a>
+        <Suspense fallback={null}>
+          <AuthButton />
+        </Suspense>
       </div>
     </>
   );

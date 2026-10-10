@@ -877,3 +877,320 @@ span.letter {
   outline: 2px solid #141414;
   outline-offset: 3px;
 }
+
+/* ------ Auth: sign-in pill + account menu (Mobbin monochrome, pills) ------ */
+.ff-signin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.33;
+  color: #141414;
+  background: #f3f3f3;
+  border: 1px solid #f0f0f0;
+  border-radius: 9999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.ff-signin-pill:hover {
+  background: #e9e9e9;
+  text-decoration: none;
+}
+.ff-signin-pill:active {
+  transform: scale(0.96);
+}
+.ff-signin-pill:focus-visible {
+  outline: 2px solid #141414;
+  outline-offset: 2px;
+}
+.ff-signin-pill:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ff-signin-large {
+  font-size: 15px;
+  padding: 12px 24px;
+}
+.ff-auth-loading {
+  min-width: 24px;
+  justify-content: center;
+}
+.ff-account {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.ff-avatar-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid #e0e0e0;
+  background: #f3f3f3;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.1s ease;
+}
+.ff-avatar-btn:active {
+  transform: scale(0.94);
+}
+.ff-avatar-btn:focus-visible {
+  outline: 2px solid #141414;
+  outline-offset: 2px;
+}
+.ff-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+}
+.ff-avatar-fallback {
+  font-size: 15px;
+  font-weight: 650;
+  color: #141414;
+}
+.ff-account-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 8px 24px rgba(20, 20, 20, 0.08);
+  z-index: 60;
+  animation: ff-menu-in 0.16s ease backwards;
+}
+@keyframes ff-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ff-account-email {
+  font-size: 13px;
+  font-weight: 500;
+  color: #707070;
+  padding: 10px 12px 6px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+}
+.ff-account-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #141414;
+  background: transparent;
+  border: 0;
+  border-radius: 9999px;
+  padding: 9px 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.ff-account-item:hover {
+  background: #f3f3f3;
+  text-decoration: none;
+}
+.ff-account-item.active {
+  background: #141414;
+  color: #ffffff;
+}
+
+/* ------ History page ------ */
+.ff-history {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 0 64px;
+  animation: ff-history-in 0.4s ease backwards;
+}
+@keyframes ff-history-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ff-history h1 {
+  font-size: 32px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: #141414;
+  margin: 0 0 8px;
+}
+.ff-history-sub {
+  font-size: 15px;
+  color: #707070;
+  margin: 0 0 24px;
+}
+.ff-history-stats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: #f3f3f3;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 6px;
+  margin-bottom: 20px;
+}
+.ff-history-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 110px;
+  flex: 1;
+  padding: 12px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+}
+.ff-history-stat-value {
+  font-size: 22px;
+  font-weight: 650;
+  color: #141414;
+  font-variant-numeric: tabular-nums;
+}
+.ff-history-stat-label {
+  font-size: 12px;
+  font-weight: 456;
+  color: #707070;
+}
+.ff-history-empty {
+  background: #f3f3f3;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  color: #262626;
+}
+.ff-history-empty p {
+  margin: 0;
+  max-width: 460px;
+}
+.ff-history-hint {
+  font-size: 13px;
+  color: #707070;
+}
+.ff-history-hint code {
+  font-family: var(--font-roboto-mono), ui-monospace, monospace;
+  font-size: 12px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.ff-history-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ff-history-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.ff-history-clear {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #707070;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 9999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.ff-history-clear:hover {
+  color: #b3261e;
+  background: #fdf0f0;
+  border-color: #f3c6c6;
+}
+.ff-history-clear:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ff-history-table-scroll {
+  overflow-x: auto;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+.ff-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 640px;
+}
+.ff-history-table th,
+.ff-history-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+.ff-history-table tbody tr:last-child th,
+.ff-history-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.ff-history-table thead th {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #707070;
+  background: #fafafa;
+}
+.ff-history-table th.num,
+.ff-history-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ff-history-wpm {
+  font-weight: 650;
+  color: #141414;
+}
+.ff-history-delete {
+  font-family: inherit;
+  font-size: 13px;
+  color: #adadad;
+  background: transparent;
+  border: 0;
+  border-radius: 9999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.ff-history-delete:hover {
+  color: #b3261e;
+  background: #fdf0f0;
+}
+.ff-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

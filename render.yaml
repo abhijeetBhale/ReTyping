@@ -22,3 +22,10 @@ services:
       # Or set a custom domain and use that instead.
       - key: NEXT_PUBLIC_SITE_URL
         value: https://fingerfiasco-next.onrender.com
+      # Supabase Auth + history (public anon key only — never service_role).
+      # Get values from Supabase Dashboard → Project Settings → API.
+      # Changing these requires a manual redeploy (baked at build time).
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { DURATIONS_MS, GAME_TIME_MS, type GameMode } from "@/lib/config";
 import { LEVEL_META, parseLevel } from "@/lib/words";
 import { ConfigBar } from "@/components/ConfigBar";
 import { ResultCard } from "@/components/ResultCard";
+import { saveTestResult } from "@/lib/history";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 function letterClass(
   status: "pending" | "correct" | "incorrect",
@@ -85,6 +87,35 @@ export default function TypingGame() {
   }, [words, wordIndex]);
 
   const finished = isOver && wpm !== null;
+
+  // Persist finished tests for signed-in users (best-effort, once per test).
+  // Guests store nothing. The flag resets whenever a new test starts
+  // (finished flips false on reset), so retries each save exactly once.
+  const savedRef = useRef(false);
+  useEffect(() => {
+    if (!finished || wpm === null) {
+      savedRef.current = false;
+      return;
+    }
+    if (savedRef.current || !isSupabaseConfigured()) return;
+    savedRef.current = true;
+    (async () => {
+      try {
+        const supabase = createClient();
+        await saveTestResult(supabase, {
+          wpm,
+          accuracy,
+          correctWords,
+          typedWords,
+          durationMs,
+          level,
+          mode,
+        });
+      } catch {
+        // History is best-effort: never break the result screen.
+      }
+    })();
+  }, [finished, wpm, accuracy, correctWords, typedWords, durationMs, level, mode]);
 
   // Entrance choreography plays exactly once per page lifetime. Route remounts
   // (tab switches) must not replay it — that replay is the visible flicker.
