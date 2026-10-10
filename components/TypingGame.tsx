@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { DURATIONS_MS, GAME_TIME_MS, type GameMode } from "@/lib/config";
 import { LEVEL_META, parseLevel } from "@/lib/words";
 import { ConfigBar } from "@/components/ConfigBar";
 import { ResultCard } from "@/components/ResultCard";
+import { SignInNudge } from "@/components/SignInNudge";
+import { dismissNudge, GUEST_NUDGE_AFTER, isNudgeDismissed, recordGuestTest } from "@/lib/guestNudge";
 import { saveTestResult } from "@/lib/history";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
@@ -89,9 +91,17 @@ export default function TypingGame() {
   const finished = isOver && wpm !== null;
 
   // Persist finished tests for signed-in users (best-effort, once per test).
-  // Guests store nothing. The flag resets whenever a new test starts
-  // (finished flips false on reset), so retries each save exactly once.
+  // Guests store nothing — but after GUEST_NUDGE_AFTER guest tests we show a
+  // one-time sign-in nudge (dismiss persists in localStorage).
+  // The flag resets whenever a new test starts (finished flips false on
+  // reset), so retries each save/count exactly once.
   const savedRef = useRef(false);
+  const [showNudge, setShowNudge] = useState(false);
+  const closeNudge = useCallback(() => {
+    dismissNudge();
+    setShowNudge(false);
+    focusGame();
+  }, [focusGame]);
   useEffect(() => {
     if (!finished || wpm === null) {
       savedRef.current = false;
@@ -102,6 +112,13 @@ export default function TypingGame() {
     (async () => {
       try {
         const supabase = createClient();
+        const { data } = await supabase.auth.getUser();
+        if (!data.user) {
+          if (recordGuestTest() >= GUEST_NUDGE_AFTER && !isNudgeDismissed()) {
+            setShowNudge(true);
+          }
+          return;
+        }
         await saveTestResult(supabase, {
           wpm,
           accuracy,
@@ -261,6 +278,7 @@ export default function TypingGame() {
         <span className="tip1">shift + enter</span>
         <span className="test-reset">- Reset Test</span>
       </div>
+      <SignInNudge open={showNudge} onClose={closeNudge} />
     </div>
   );
 }

@@ -1194,3 +1194,98 @@ span.letter {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ------ Sign-in nudge modal (guest, after 3 tests) ------ */
+.ff-account-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ff-nudge-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.45);
+  animation: ff-nudge-fade 0.2s ease backwards;
+}
+@keyframes ff-nudge-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ff-nudge-modal {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(20, 20, 20, 0.18);
+  animation: ff-nudge-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes ff-nudge-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.ff-nudge-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: #707070;
+  margin: 0 0 8px;
+}
+.ff-nudge-modal h2 {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: #141414;
+  margin: 0 0 10px;
+}
+.ff-nudge-body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #707070;
+  margin: 0 0 22px;
+}
+.ff-nudge-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.ff-nudge-actions .ff-signin-pill {
+  justify-content: center;
+}
+.ff-nudge-later {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #707070;
+  background: transparent;
+  border: 0;
+  border-radius: 9999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.ff-nudge-later:hover {
+  color: #141414;
+  background: #f3f3f3;
+}
+.ff-nudge-later:focus-visible {
+  outline: 2px solid #141414;
+  outline-offset: 2px;
+}

@@ -43,10 +43,14 @@ const VISIBLE_LINES = 3;
 
 export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs: number = GAME_TIME_MS) {
 
-  // Words are built synchronously on mount so the first paint already shows
-  // a full test — otherwise every tab switch flashes an empty game surface.
-  const [initialWords] = useState(() => buildWords(mode, level, WORD_COUNT));
-  const [words, setWords] = useState(initialWords);
+  // Initial words are intentionally EMPTY: word sampling uses Math.random(),
+  // which draws different words on the server render vs. client hydration —
+  // rendering sampled words during render is a guaranteed hydration mismatch.
+  // The real test is built in the mount effect below (client-only,
+  // post-hydration), so SSR HTML stays deterministic. #game has a fixed
+  // height, so the one-frame empty paint causes no layout shift, and tab
+  // switches never remount (shared layout), so there is no flicker there.
+  const [words, setWords] = useState<EngineWord[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [letterIndex, setLetterIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(Math.round(durationMs / 1000));
@@ -65,7 +69,7 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
   const lineHeightRef = useRef(0);
   // Synchronous mirrors so rapid key repeats never read stale state.
   const posRef = useRef({ wordIndex: 0, letterIndex: 0 });
-  const wordsRefState = useRef(initialWords);
+  const wordsRefState = useRef<EngineWord[]>([]);
   const overRef = useRef(false);
 
   useEffect(() => {
@@ -127,9 +131,10 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
     });
   }, [clearTimer, mode, level, durationMs]);
 
-  // Mount already painted full words (see lazy initializer above), so it only
-  // grabs focus — rebuilding here would swap the words right after paint,
-  // which reads as a flicker on every tab switch. Param changes still reset.
+  // Mount builds the first real test client-side (post-hydration) — sampling
+  // here keeps server and client renders identical (both empty). Rebuilding
+  // in render would swap the words right after paint, which reads as a
+  // flicker. Param changes still reset via reset() below.
   // NOTE: keyed on the param values, not a boolean flag — an effect cleanup
   // that resets a "mounted" flag runs before EVERY re-invocation, which would
   // swallow all post-mount resets (level/duration/mode changes doing nothing).
@@ -138,6 +143,9 @@ export function useTypingEngine(mode: GameMode, level: EnglishLevel, durationMs:
     const key = `${mode}|${level}|${durationMs}`;
     if (initialKeyRef.current === null) {
       initialKeyRef.current = key;
+      const fresh = buildWords(mode, level, WORD_COUNT);
+      wordsRefState.current = fresh;
+      setWords(fresh);
       gameRef.current?.focus();
       return;
     }

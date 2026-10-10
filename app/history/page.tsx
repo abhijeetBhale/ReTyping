@@ -71,7 +71,7 @@ export default async function HistoryPage() {
         <h1>History</h1>
         <p className="ff-history-sub" title={user.email ?? undefined}>
           {rows.length === 0
-            ? "No saved tests yet — finish a typing test and it will appear here."
+            ? "Take your first test to start keeping a record of it."
             : `Saved tests for ${user.email ?? "your account"}.`}
         </p>
         {rows.length > 0 && (

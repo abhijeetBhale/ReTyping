@@ -51,7 +51,7 @@ export function HistoryTable({ initialRows }: { initialRows: HistoryRow[] }) {
   if (rows.length === 0) {
     return (
       <div className="ff-history-empty">
-        <p>No saved tests yet. Finish a typing test while signed in and it will show up here.</p>
+        <p>Take your first test to keep a record of it — every finished test will show up here with WPM, accuracy and full details.</p>
       </div>
     );
   }
@@ -80,7 +80,7 @@ export function HistoryTable({ initialRows }: { initialRows: HistoryRow[] }) {
           <tbody>
             {rows.map((row) => (
               <tr key={row.id}>
-                <td>{formatDate(row.createdAt)}</td>
+                <td suppressHydrationWarning>{formatDate(row.createdAt)}</td>
                 <td className="num ff-history-wpm">{row.wpm.toFixed(0)}</td>
                 <td className="num">{row.accuracy.toFixed(0)}%</td>
                 <td className="num">{row.correctWords}/{row.typedWords}</td>
@@ -94,6 +94,7 @@ export function HistoryTable({ initialRows }: { initialRows: HistoryRow[] }) {
                     onClick={() => removeRow(row.id)}
                     disabled={deletingId === row.id}
                     aria-label={`Delete test from ${formatDate(row.createdAt)}`}
+                    suppressHydrationWarning
                   >
                     {deletingId === row.id ? "…" : "✕"}
                   </button>

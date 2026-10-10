@@ -91,9 +91,11 @@ export function AuthButton() {
 
   const signIn = useCallback(async () => {
     const supabase = createClient();
+    // Stay on the current page after login — the navbar/avatar just gains
+    // the History tab; the game underneath never remounts.
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/history` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${window.location.pathname}` },
     });
   }, []);
 
@@ -126,39 +128,48 @@ export function AuthButton() {
   const onHistory = pathname === "/history";
 
   return (
-    <div className="ff-account" ref={menuRef}>
-      <button
-        type="button"
-        className="ff-avatar-btn"
-        onClick={() => setOpen((v) => !v)}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={`Account: ${user.email ?? "signed in"}`}
-        title={user.email ?? "Account"}
+    <div className="ff-account-wrap">
+      <Link
+        href="/history"
+        className={`ff-top-link${onHistory ? " active" : ""}`}
+        aria-current={onHistory ? "page" : undefined}
       >
-        {user.avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.avatarUrl} alt="" width={28} height={28} className="ff-avatar-img" referrerPolicy="no-referrer" />
-        ) : (
-          <span className="ff-avatar-fallback" aria-hidden="true">{initial}</span>
+        History
+      </Link>
+      <div className="ff-account" ref={menuRef}>
+        <button
+          type="button"
+          className="ff-avatar-btn"
+          onClick={() => setOpen((v) => !v)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={`Account: ${user.email ?? "signed in"}`}
+          title={user.email ?? "Account"}
+        >
+          {user.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={user.avatarUrl} alt="" width={28} height={28} className="ff-avatar-img" referrerPolicy="no-referrer" />
+          ) : (
+            <span className="ff-avatar-fallback" aria-hidden="true">{initial}</span>
+          )}
+        </button>
+        {open && (
+          <div className="ff-account-menu" role="menu">
+            <p className="ff-account-email" title={user.email ?? undefined}>{user.email}</p>
+            <Link
+              href="/history"
+              className={`ff-account-item${onHistory ? " active" : ""}`}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+            >
+              History
+            </Link>
+            <button type="button" className="ff-account-item" role="menuitem" onClick={signOut}>
+              Sign out
+            </button>
+          </div>
         )}
-      </button>
-      {open && (
-        <div className="ff-account-menu" role="menu">
-          <p className="ff-account-email" title={user.email ?? undefined}>{user.email}</p>
-          <Link
-            href="/history"
-            className={`ff-account-item${onHistory ? " active" : ""}`}
-            role="menuitem"
-            onClick={() => setOpen(false)}
-          >
-            History
-          </Link>
-          <button type="button" className="ff-account-item" role="menuitem" onClick={signOut}>
-            Sign out
-          </button>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
